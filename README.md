@@ -102,7 +102,8 @@ Edit those files to update any text, percentages, or add new entries.
 
 ---
 
-## 🎨 Colours
+## 🌐 Live Site
 
-The amber accent `#D4A96A` is used throughout.
-To change it, search and replace `#D4A96A` in `src/styles/globals.css`.
+The portfolio is deployed to GitHub Pages and is accessible at:
+https://anny-11.github.io/Portfolio/
+
