@@ -107,26 +107,26 @@ export default function Hero() {
 
         {/* Name */}
         <h1 className="animate-fadeUp-d1" style={styles.name}>
-          Varshini
+          Varshini N P
         </h1>
 
         {/* Role */}
         <p className="animate-fadeUp-d2" style={styles.role}>
-          Product Thinking Enthusiast · Software Systems Student
+          Software Systems Student | Product & UX Enthusiast
         </p>
 
         {/* Tagline */}
         <p className="animate-fadeUp-d3" style={styles.tagline}>
-          "Understanding users, analyzing problems, and building meaningful solutions"
+          "Understanding users, solving problems, and exploring the intersection of product, business, and technology."
         </p>
 
         {/* CTA buttons */}
         <div className="animate-fadeUp-d5" style={styles.ctaRow}>
           <HeroButton
             primary
-            onClick={() => scrollTo('work')}
+            onClick={() => scrollTo('projects')}
           >
-            View Work
+            View Projects
           </HeroButton>
           <HeroButton onClick={() => scrollTo('contact')}>
             Contact

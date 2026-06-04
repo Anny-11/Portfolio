@@ -89,23 +89,7 @@ export default function Skills() {
           z-index: 10;
         }
 
-        .skill-val {
-          max-width: 0;
-          opacity: 0;
-          overflow: hidden;
-          display: inline-block;
-          white-space: nowrap;
-          transition: max-width 0.4s ease, opacity 0.3s ease, margin-left 0.3s ease;
-          font-family: "DM Mono", monospace;
-          font-weight: 600;
-          font-size: 0.8em;
-        }
 
-        .skill-pill:hover .skill-val {
-          max-width: 80px;
-          opacity: 1;
-          margin-left: 0.5em;
-        }
 
         @media (max-width: 640px) {
           .skill-cloud {
@@ -164,9 +148,6 @@ function SkillPill({ item, index, containerVisible }) {
       }}
     >
       <span>{item.label}</span>
-      <span className="skill-val" style={{ color: item.accent }}>
-        {item.level}%
-      </span>
     </div>
   )
 }

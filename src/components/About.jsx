@@ -11,12 +11,12 @@ import Label from './ui/Label'
 import CornerCard from './ui/CornerCard'
 
 const INFO_ROWS = [
-  ['Background', 'Software Systems, Integrated M.Sc. '],
-  ['Interested in', 'Product Design, Data Analysis'],
-  ['Approach', 'Curiosity-driven, not credential-driven'],
-  ['Strengths', 'Analytical thinking, communication'],
-  ['Currently', 'Open to internships & collaborations'],
-  ['Based in', 'India'],
+  ['Background', 'Software Systems, M.Sc. Integrated'],
+  ['Exploring', 'Product Management, Product Design, UX'],
+  ['Approach', 'Curious, analytical, and open to learning'],
+  ['Strengths', 'Problem Solving, Leadership, Communication'],
+  ['Current Role', 'Product Intelligence Intern'],
+  ['Based In', 'Coimbatore, India'],
 ]
 
 export default function About() {
@@ -40,27 +40,20 @@ export default function About() {
           <Label>About</Label>
 
           <h2 style={styles.heading}>
-            Systems thinker.<br />
             People observer.<br />
-            <em style={{ color: '#D4A96A' }}>Problem finder.</em>
+            Problem finder.<br />
+            <em style={{ color: '#D4A96A' }}>Always figuring things out.</em>
           </h2>
 
           <div style={{ marginTop: '3rem' }}>
             <p style={styles.para}>
-              I'm a Software Systems student with a stronger pull toward understanding
-              people than writing code. I'm drawn to the question of <em>why</em> things
-              work or fail — in products, in systems, in teams. That curiosity has shaped
-              how I think more than any textbook.
+              I'm a Software Systems student who gradually realized that I enjoy understanding people and problems more than just writing code.
             </p>
             <p style={{ ...styles.para, marginTop: '1.25rem' }}>
-              I've had some exposure to UI/UX and Figma, and I find product thinking
-              genuinely interesting — the intersection of user psychology, business logic,
-              and systems design. I'm not an expert in any one area yet, but I'm someone
-              who asks the right questions, stays curious, and learns by doing.
+              Over time, I found myself becoming curious about why people use certain products, what influences their decisions, and how technology can solve real-world challenges. That curiosity led me to explore areas like product management, design, and user experience.
             </p>
             <p style={{ ...styles.para, marginTop: '1.25rem' }}>
-              Outside academics, I've led teams, organised events, and seen firsthand how
-              clarity — or the lack of it — determines outcomes.
+              Through projects, leadership roles, and my current internship, I've been learning how ideas take shape, how teams work together, and how products are built around user needs. I'm still exploring where I fit best, but I enjoy asking questions, understanding different perspectives, and finding better ways to solve problems.
             </p>
 
             <div style={{ marginTop: '2.5rem' }}>

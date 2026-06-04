@@ -24,21 +24,38 @@ export default function Contact() {
     return e
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const e = validate()
     if (Object.keys(e).length) { setErrors(e); return }
     setErrors({})
-    setSent(true)
 
-    // Trigger local mail client to actually prepare the email
-    const recipient = 'varshv8@gmail.com'
-    const subject = `Portfolio Contact from ${form.name}`
-    const body = `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
-    
-    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: '858c8bad-18dd-4f5a-9d4b-97a1bde808db',
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          subject: `Portfolio Contact from ${form.name}`
+        })
+      })
 
-    setForm({ name: '', email: '', message: '' })
-    setTimeout(() => setSent(false), 4000)
+      const result = await response.json()
+      if (result.success) {
+        setSent(true)
+        setForm({ name: '', email: '', message: '' })
+        setTimeout(() => setSent(false), 5000)
+      } else {
+        setErrors({ submit: 'Something went wrong. Please try again.' })
+      }
+    } catch (err) {
+      setErrors({ submit: 'Failed to connect. Please check your internet.' })
+    }
   }
 
   const set = (field) => (ev) => {
@@ -96,7 +113,14 @@ export default function Contact() {
             {/* Success banner */}
             {sent && (
               <div style={styles.successBanner}>
-                Message sent — I'll get back to you soon.
+                Got it! Your message is in my inbox. I'll get back to you soon!
+              </div>
+            )}
+
+            {/* Error banner */}
+            {errors.submit && (
+              <div style={{ ...styles.successBanner, background: 'rgba(224,112,112,0.12)', border: '1px solid rgba(224,112,112,0.3)', color: '#e07070' }}>
+                {errors.submit}
               </div>
             )}
 

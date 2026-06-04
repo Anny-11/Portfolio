@@ -1,11 +1,11 @@
-// src/components/WorkExplorations.jsx
+// src/components/Projects.jsx
 import { useState, useEffect } from 'react'
 import useInView      from '../hooks/useInView'
 import Label          from './ui/Label'
 import ImageSlot      from './ui/ImageSlot'
-import explorations   from '../data/explorations'
+import projects      from '../data/projects'
 
-export default function WorkExplorations() {
+export default function Projects() {
   const [ref, visible] = useInView()
   const [selectedItem, setSelectedItem] = useState(null)
 
@@ -20,7 +20,7 @@ export default function WorkExplorations() {
 
   return (
     <section
-      id="work"
+      id="projects"
       style={{
         padding:    'clamp(5rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem)',
         background: 'rgba(255,255,255,0.015)',
@@ -38,18 +38,17 @@ export default function WorkExplorations() {
             transition:   'all 0.7s ease',
           }}
         >
-          <Label>Work & Explorations</Label>
+          <Label>Projects</Label>
           <h2 style={styles.heading}>Things I've thought through</h2>
           <p style={styles.sub}>
-            No formal case studies — just real problems I explored, what I noticed,
-            and what I took away. Tap a project to view the BTS (Behind The Scenes).
+            No tech stack dumps or list of features — just real problems I explored, how I solved them, and what I took away. Tap a project to view the BTS.
           </p>
         </div>
 
         {/* Cards grid */}
         <div className="work-grid">
-          {explorations.map((item, i) => (
-            <ExplorationCard key={item.id} item={item} index={i} onClick={() => setSelectedItem(item)} />
+          {projects.map((item, i) => (
+            <ProjectCard key={item.id} item={item} index={i} onClick={() => setSelectedItem(item)} />
           ))}
         </div>
       </div>
@@ -109,22 +108,16 @@ export default function WorkExplorations() {
                   <p style={{...styles.metaVal, fontSize: '1rem'}}>{selectedItem.problem}</p>
                 </div>
                 
-                {/* Reason */}
+                {/* Solution */}
                 <div style={styles.modalSection}>
-                  <div style={{ ...styles.metaKey, color: selectedItem.accent, fontSize: '0.7rem' }}>Why I did it</div>
-                  <p style={{...styles.metaVal, fontSize: '1rem'}}>{selectedItem.reason}</p>
+                  <div style={{ ...styles.metaKey, color: selectedItem.accent, fontSize: '0.7rem' }}>The Solution</div>
+                  <p style={{...styles.metaVal, fontSize: '1rem'}}>{selectedItem.solution}</p>
                 </div>
 
-                {/* Innovations & Thoughts */}
+                {/* What I Learned */}
                 <div style={styles.modalSection}>
-                  <div style={{ ...styles.metaKey, color: selectedItem.accent, fontSize: '0.7rem' }}>Thoughts & Innovations</div>
-                  <p style={{...styles.metaVal, fontSize: '1rem'}}>{selectedItem.innovations}</p>
-                </div>
-
-                {/* Understanding the Users */}
-                <div style={styles.modalSection}>
-                  <div style={{ ...styles.metaKey, color: selectedItem.accent, fontSize: '0.7rem' }}>Understanding the User</div>
-                  <p style={{...styles.metaVal, fontSize: '1rem'}}>{selectedItem.userUnderstanding}</p>
+                  <div style={{ ...styles.metaKey, color: selectedItem.accent, fontSize: '0.7rem' }}>What I Learned</div>
+                  <p style={{...styles.metaVal, fontSize: '1rem'}}>{selectedItem.learned}</p>
                 </div>
 
                 {/* Images grid inside modal */}
@@ -153,21 +146,12 @@ export default function WorkExplorations() {
         @media (max-width: 640px) {
           .work-grid { grid-template-columns: 1fr !important; }
         }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
       `}</style>
     </section>
   )
 }
 
-/* ── Card ──────────────────────────────────────────────── */
-function ExplorationCard({ item, index, onClick }) {
+function ProjectCard({ item, index, onClick }) {
   const [cardRef, visible] = useInView()
   const [hovered, setHovered] = useState(false)
 
@@ -275,7 +259,6 @@ function ExplorationCard({ item, index, onClick }) {
   )
 }
 
-/* ── Styles ─────────────────────────────────────────────── */
 const styles = {
   heading: {
     fontFamily: '"Playfair Display", serif',
