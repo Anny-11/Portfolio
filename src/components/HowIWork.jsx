@@ -27,37 +27,30 @@ export default function HowIWork() {
         <h2 style={styles.heading}>
           How I Work
         </h2>
-        <h3 style={styles.subHeading}>
-          It starts with a question.
-        </h3>
         
-        {/* Questions Grid */}
-        <div style={styles.questionsGrid}>
-          <div style={styles.questionCard}>
-            <span style={styles.questionNum}>?</span>
-            <p style={styles.questionText}>"Why do notes get lost in chats?"</p>
+        {/* 3-Box Grid */}
+        <div style={styles.grid}>
+          {/* Box 1: Questions */}
+          <div style={styles.card}>
+            <h3 style={styles.cardTitle}>It starts with a question.</h3>
+            <ul style={styles.questionList}>
+              <li style={styles.questionItem}>Why do notes get lost in chats?</li>
+              <li style={styles.questionItem}>Why does obstacle detection stop at detection?</li>
+              <li style={styles.questionItem}>Why can't multiple tasks run the way I need them to?</li>
+            </ul>
           </div>
-          <div style={styles.questionCard}>
-            <span style={styles.questionNum}>?</span>
-            <p style={styles.questionText}>"Why does obstacle detection stop at detection?"</p>
-          </div>
-          <div style={styles.questionCard}>
-            <span style={styles.questionNum}>?</span>
-            <p style={styles.questionText}>"Why can't multiple tasks run the way I need them to?"</p>
-          </div>
-        </div>
 
-        {/* Process Flow */}
-        <div style={styles.flowGrid}>
-          <div style={styles.flowCol}>
-            <h4 style={styles.stepTitle}>Then comes exploration.</h4>
+          {/* Box 2: Exploration */}
+          <div style={styles.card}>
+            <h3 style={styles.cardTitle}>Then comes exploration.</h3>
             <p style={styles.para}>
               I break the problem down, think through edge cases, sketch possible solutions, and try to understand what people actually need.
             </p>
           </div>
-          
-          <div style={styles.flowCol}>
-            <h4 style={styles.stepTitle}>Then I build.</h4>
+
+          {/* Box 3: Build */}
+          <div style={styles.card}>
+            <h3 style={styles.cardTitle}>Then I build.</h3>
             <p style={styles.para}>
               Using technology and AI-assisted tools, I turn ideas into prototypes and test whether the solution genuinely solves the original problem.
             </p>
@@ -74,73 +67,50 @@ const styles = {
     fontSize: 'clamp(2.5rem, 6vw, 4rem)',
     fontWeight: 700,
     color: '#fff',
-    margin: '1rem 0 1rem',
+    margin: '1rem 0 3rem',
     lineHeight: 1.1,
   },
-  subHeading: {
-    fontFamily: '"Lora", serif',
-    fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
-    color: '#D4A96A',
-    fontWeight: 500,
-    margin: '0 0 3rem 0',
-    fontStyle: 'italic',
-    lineHeight: 1.4,
-  },
-  questionsGrid: {
+  grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-    gap: '1.5rem',
-    marginBottom: '4rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+    gap: '2rem',
+    marginTop: '2rem',
   },
-  questionCard: {
+  card: {
     background: 'rgba(255,255,255,0.02)',
-    border: '1px solid rgba(255,255,255,0.06)',
-    borderRadius: '4px',
-    padding: '2rem',
+    borderLeft: '2px solid rgba(212,169,106,0.3)',
+    padding: '2.5rem 2rem',
+    borderRadius: '0 4px 4px 0',
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.75rem',
+    gap: '1.25rem',
   },
-  questionNum: {
-    fontFamily: '"Playfair Display", serif',
-    fontSize: '2rem',
-    color: '#D4A96A',
-    opacity: 0.5,
-    fontWeight: 600,
-    lineHeight: 1,
-  },
-  questionText: {
-    fontFamily: '"Lora", serif',
-    fontSize: '1.05rem',
-    color: 'rgba(255,255,255,0.8)',
-    lineHeight: 1.6,
-    fontStyle: 'italic',
-    margin: 0,
-  },
-  flowGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-    gap: '3rem',
-    borderTop: '1px solid rgba(255,255,255,0.06)',
-    paddingTop: '3rem',
-  },
-  flowCol: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1rem',
-  },
-  stepTitle: {
+  cardTitle: {
     fontFamily: '"Playfair Display", serif',
     fontSize: '1.4rem',
     fontWeight: 600,
-    color: '#fff',
+    color: '#D4A96A',
     margin: 0,
+  },
+  questionList: {
+    margin: 0,
+    paddingLeft: '1.25rem',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.85rem',
+  },
+  questionItem: {
+    fontFamily: '"Lora", serif',
+    fontSize: '1rem',
+    color: 'rgba(255,255,255,0.7)',
+    fontStyle: 'italic',
+    lineHeight: 1.5,
   },
   para: {
     fontFamily: '"Lora", serif',
-    fontSize: '1rem',
+    fontSize: '1.02rem',
     lineHeight: 1.8,
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(255,255,255,0.65)',
     margin: 0,
   },
 }
