@@ -58,7 +58,7 @@ export default function About() {
 
             <div style={{ marginTop: '2.5rem' }}>
               <a
-                href="/resume.pdf"
+                href="https://drive.google.com/drive/folders/1vf-igPC7dR9vZU88e7HHeDqy6QWsKmgx?usp=sharing"
                 target="_blank"
                 rel="noreferrer"
                 style={styles.resumeBtn}

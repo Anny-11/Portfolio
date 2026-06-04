@@ -131,7 +131,7 @@ export default function Hero() {
           <HeroButton onClick={() => scrollTo('contact')}>
             Contact
           </HeroButton>
-          <HeroButton as="a" href="/resume.pdf" target="_blank" rel="noreferrer">
+          <HeroButton as="a" href="https://drive.google.com/drive/folders/1vf-igPC7dR9vZU88e7HHeDqy6QWsKmgx?usp=sharing" target="_blank" rel="noreferrer">
             Resume
           </HeroButton>
         </div>
