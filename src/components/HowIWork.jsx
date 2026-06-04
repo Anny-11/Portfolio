@@ -28,18 +28,38 @@ export default function HowIWork() {
           How I Work
         </h2>
         <h3 style={styles.subHeading}>
-          I usually start with a problem rather than the technology.
+          It starts with a question.
         </h3>
         
-        <div style={styles.grid}>
-          <div style={styles.col}>
+        {/* Questions Grid */}
+        <div style={styles.questionsGrid}>
+          <div style={styles.questionCard}>
+            <span style={styles.questionNum}>?</span>
+            <p style={styles.questionText}>"Why do notes get lost in chats?"</p>
+          </div>
+          <div style={styles.questionCard}>
+            <span style={styles.questionNum}>?</span>
+            <p style={styles.questionText}>"Why does obstacle detection stop at detection?"</p>
+          </div>
+          <div style={styles.questionCard}>
+            <span style={styles.questionNum}>?</span>
+            <p style={styles.questionText}>"Why can't multiple tasks run the way I need them to?"</p>
+          </div>
+        </div>
+
+        {/* Process Flow */}
+        <div style={styles.flowGrid}>
+          <div style={styles.flowCol}>
+            <h4 style={styles.stepTitle}>Then comes exploration.</h4>
             <p style={styles.para}>
-              Most of my projects begin with an everyday frustration, a question, or an observation. I spend time understanding the problem, sketching ideas, and thinking through possible solutions before moving to implementation.
+              I break the problem down, think through edge cases, sketch possible solutions, and try to understand what people actually need.
             </p>
           </div>
-          <div style={styles.col}>
+          
+          <div style={styles.flowCol}>
+            <h4 style={styles.stepTitle}>Then I build.</h4>
             <p style={styles.para}>
-              I use AI tools as part of my workflow, allowing me to focus on problem-solving, user needs, and product thinking while turning ideas into working prototypes.
+              Using technology and AI-assisted tools, I turn ideas into prototypes and test whether the solution genuinely solves the original problem.
             </p>
           </div>
         </div>
@@ -66,23 +86,61 @@ const styles = {
     fontStyle: 'italic',
     lineHeight: 1.4,
   },
-  grid: {
+  questionsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '3rem',
-    marginTop: '2rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '1.5rem',
+    marginBottom: '4rem',
   },
-  col: {
+  questionCard: {
     background: 'rgba(255,255,255,0.02)',
-    borderLeft: '2px solid rgba(212,169,106,0.3)',
+    border: '1px solid rgba(255,255,255,0.06)',
+    borderRadius: '4px',
     padding: '2rem',
-    borderRadius: '0 4px 4px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+  },
+  questionNum: {
+    fontFamily: '"Playfair Display", serif',
+    fontSize: '2rem',
+    color: '#D4A96A',
+    opacity: 0.5,
+    fontWeight: 600,
+    lineHeight: 1,
+  },
+  questionText: {
+    fontFamily: '"Lora", serif',
+    fontSize: '1.05rem',
+    color: 'rgba(255,255,255,0.8)',
+    lineHeight: 1.6,
+    fontStyle: 'italic',
+    margin: 0,
+  },
+  flowGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '3rem',
+    borderTop: '1px solid rgba(255,255,255,0.06)',
+    paddingTop: '3rem',
+  },
+  flowCol: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1rem',
+  },
+  stepTitle: {
+    fontFamily: '"Playfair Display", serif',
+    fontSize: '1.4rem',
+    fontWeight: 600,
+    color: '#fff',
+    margin: 0,
   },
   para: {
     fontFamily: '"Lora", serif',
-    fontSize: '1.05rem',
+    fontSize: '1rem',
     lineHeight: 1.8,
-    color: 'rgba(255,255,255,0.65)',
+    color: 'rgba(255,255,255,0.6)',
     margin: 0,
   },
 }
