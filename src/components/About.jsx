@@ -6,18 +6,15 @@
 //   3. Pass it to <ImageSlot src={avatarImg} />
 // ────────────────────────────────────────────────────────────
 
-import avatarImg from '../assets/images/avatar.jpg'
-
 import useInView from '../hooks/useInView'
 import Label from './ui/Label'
 import CornerCard from './ui/CornerCard'
-import ImageSlot from './ui/ImageSlot'
 
 const INFO_ROWS = [
-  ['Background', 'Software Systems, B.Tech'],
-  ['Interested in', 'Product Design, PM, Business / MBA'],
+  ['Background', 'Software Systems, Integrated M.Sc. '],
+  ['Interested in', 'Product Design, Data Analysis'],
   ['Approach', 'Curiosity-driven, not credential-driven'],
-  ['Strengths', 'Analytical thinking, people & systems'],
+  ['Strengths', 'Analytical thinking, communication'],
   ['Currently', 'Open to internships & collaborations'],
   ['Based in', 'India'],
 ]
@@ -35,11 +32,10 @@ export default function About() {
     <section
       id="about"
       ref={ref}
-      style={{ padding: 'clamp(5rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem)' }}
+      style={{ padding: 'clamp(5rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem)', maxWidth: '1100px', margin: '0 auto' }}
     >
       <div style={styles.grid} className="about-two-col">
-
-        {/* ── Left column: text ── */}
+        {/* ── Left column: heading + text ── */}
         <div style={fadeStyle(0)}>
           <Label>About</Label>
 
@@ -49,73 +45,86 @@ export default function About() {
             <em style={{ color: '#D4A96A' }}>Problem finder.</em>
           </h2>
 
-          <p style={styles.para}>
-            I'm a Software Systems student with a stronger pull toward understanding
-            people than writing code. I'm drawn to the question of <em>why</em> things
-            work or fail — in products, in systems, in teams. That curiosity has shaped
-            how I think more than any textbook.
-          </p>
-          <p style={{ ...styles.para, marginTop: '1.25rem' }}>
-            I've had some exposure to UI/UX and Figma, and I find product thinking
-            genuinely interesting — the intersection of user psychology, business logic,
-            and systems design. I'm not an expert in any one area yet, but I'm someone
-            who asks the right questions, stays curious, and learns by doing.
-          </p>
-          <p style={{ ...styles.para, marginTop: '1.25rem' }}>
-            Outside academics, I've led teams, organised events, and seen firsthand how
-            clarity — or the lack of it — determines outcomes.
-          </p>
-        </div>
+          <div style={{ marginTop: '3rem' }}>
+            <p style={styles.para}>
+              I'm a Software Systems student with a stronger pull toward understanding
+              people than writing code. I'm drawn to the question of <em>why</em> things
+              work or fail — in products, in systems, in teams. That curiosity has shaped
+              how I think more than any textbook.
+            </p>
+            <p style={{ ...styles.para, marginTop: '1.25rem' }}>
+              I've had some exposure to UI/UX and Figma, and I find product thinking
+              genuinely interesting — the intersection of user psychology, business logic,
+              and systems design. I'm not an expert in any one area yet, but I'm someone
+              who asks the right questions, stays curious, and learns by doing.
+            </p>
+            <p style={{ ...styles.para, marginTop: '1.25rem' }}>
+              Outside academics, I've led teams, organised events, and seen firsthand how
+              clarity — or the lack of it — determines outcomes.
+            </p>
 
-        {/* ── Right column: avatar + info card ── */}
-        <div style={fadeStyle(0.2)}>
-
-          {/* ─── YOUR PHOTO GOES HERE ─────────────────────────
-              Replace `src={null}` with `src={avatarImg}` after
-              dropping avatar.jpg into src/assets/images/
-          ──────────────────────────────────────────────────── */}
-          <div style={styles.avatarWrapper}>
-            <ImageSlot
-              src={avatarImg}           // ← swap with avatarImg
-              alt="Varshini — profile photo"
-              accent="#D4A96A"
-              height="260px"
-              style={{ borderRadius: '50%', border: '1px solid rgba(212,169,106,0.25)' }}
-            />
-            {/* Decorative pulsing ring */}
-            <div className="avatar-ring" aria-hidden="true" />
-          </div>
-
-          {/* Info card */}
-          <CornerCard style={{ marginTop: '2rem' }}>
-            {INFO_ROWS.map(([k, v], i) => (
-              <div
-                key={k}
-                style={{
-                  marginBottom: i < INFO_ROWS.length - 1 ? '1.5rem' : 0,
-                  paddingBottom: i < INFO_ROWS.length - 1 ? '1.5rem' : 0,
-                  borderBottom: i < INFO_ROWS.length - 1
-                    ? '1px solid rgba(255,255,255,0.06)'
-                    : 'none',
+            <div style={{ marginTop: '2.5rem' }}>
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+                style={styles.resumeBtn}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#E8C484'
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#D4A96A'
+                  e.currentTarget.style.transform = 'translateY(0)'
                 }}
               >
-                <div style={styles.infoKey}>{k}</div>
-                <div style={styles.infoVal}>{v}</div>
-              </div>
-            ))}
-          </CornerCard>
+                View Resume
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Right column: floating info card ── */}
+        <div style={fadeStyle(0.2)}>
+          <div className="floating-card-wrapper">
+            <CornerCard style={{ marginTop: '0', background: 'rgba(20,20,20,0.6)', backdropFilter: 'blur(10px)' }}>
+              {INFO_ROWS.map(([k, v], i) => (
+                <div
+                  key={k}
+                  style={{
+                    marginBottom: i < INFO_ROWS.length - 1 ? '1.5rem' : 0,
+                    paddingBottom: i < INFO_ROWS.length - 1 ? '1.5rem' : 0,
+                    borderBottom: i < INFO_ROWS.length - 1
+                      ? '1px solid rgba(255,255,255,0.06)'
+                      : 'none',
+                  }}
+                >
+                  <div style={styles.infoKey}>{k}</div>
+                  <div style={styles.infoVal}>{v}</div>
+                </div>
+              ))}
+            </CornerCard>
+          </div>
         </div>
       </div>
 
-      {/* Responsive grid */}
+      {/* Responsive grid & animations */}
       <style>{`
         .about-two-col {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 5rem;
-          align-items: start;
-          max-width: 1100px;
-          margin: 0 auto;
+          align-items: center;
+        }
+        @keyframes floatCard {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
+          100% { transform: translateY(0px); }
+        }
+        .floating-card-wrapper {
+          animation: floatCard 6s ease-in-out infinite;
+          box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+          border-radius: 4px;
         }
         @media (max-width: 768px) {
           .about-two-col { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
@@ -127,6 +136,20 @@ export default function About() {
 
 /* ── Styles ─────────────────────────────────────────────── */
 const styles = {
+  resumeBtn: {
+    display: 'inline-block',
+    padding: '0.85rem 2.25rem',
+    background: '#D4A96A',
+    color: '#0A0A0A',
+    textDecoration: 'none',
+    fontFamily: '"DM Mono", monospace',
+    fontSize: '0.75rem',
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    fontWeight: 600,
+    borderRadius: '2px',
+    transition: 'all 0.25s ease',
+  },
   grid: {},
   heading: {
     fontFamily: '"Playfair Display", serif',
@@ -141,11 +164,6 @@ const styles = {
     fontSize: '1.05rem',
     lineHeight: 1.9,
     color: 'rgba(255,255,255,0.6)',
-  },
-  avatarWrapper: {
-    position: 'relative',
-    width: '220px',
-    margin: '0 auto',
   },
   infoKey: {
     fontFamily: '"DM Mono", monospace',

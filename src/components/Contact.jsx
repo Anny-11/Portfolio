@@ -1,24 +1,24 @@
 // src/components/Contact.jsx
 import { useState } from 'react'
-import useInView     from '../hooks/useInView'
-import Label         from './ui/Label'
-import CornerCard    from './ui/CornerCard'
+import useInView from '../hooks/useInView'
+import Label from './ui/Label'
+import CornerCard from './ui/CornerCard'
 
 const CONTACT_LINKS = [
-  { label: 'Email',    value: 'varshini@example.com',       href: 'mailto:varshini@example.com', icon: '✉' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/varshini',   href: 'https://linkedin.com/in/varshini', icon: '↗' },
+  { label: 'Email', value: 'varshv8@gmail.com', href: 'mailto:varshv8@gmail.com', icon: '✉' },
+  { label: 'LinkedIn', value: 'linkedin.com/in/varshini1116/', href: 'https://linkedin.com/in/varshini1116/', icon: '↗' },
 ]
 
 export default function Contact() {
-  const [ref, visible]  = useInView()
+  const [ref, visible] = useInView()
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [sent, setSent] = useState(false)
   const [errors, setErrors] = useState({})
 
   const validate = () => {
     const e = {}
-    if (!form.name.trim())    e.name    = 'Name is required'
-    if (!form.email.trim())   e.email   = 'Email is required'
+    if (!form.name.trim()) e.name = 'Name is required'
+    if (!form.email.trim()) e.email = 'Email is required'
     else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = 'Enter a valid email'
     if (!form.message.trim()) e.message = 'Message is required'
     return e
@@ -29,6 +29,14 @@ export default function Contact() {
     if (Object.keys(e).length) { setErrors(e); return }
     setErrors({})
     setSent(true)
+
+    // Trigger local mail client to actually prepare the email
+    const recipient = 'varshv8@gmail.com'
+    const subject = `Portfolio Contact from ${form.name}`
+    const body = `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`
+    
+    window.location.href = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+
     setForm({ name: '', email: '', message: '' })
     setTimeout(() => setSent(false), 4000)
   }
@@ -39,8 +47,8 @@ export default function Contact() {
   }
 
   const fadeStyle = (delay = 0) => ({
-    opacity:    visible ? 1 : 0,
-    transform:  visible ? 'none' : 'translateY(30px)',
+    opacity: visible ? 1 : 0,
+    transform: visible ? 'none' : 'translateY(30px)',
     transition: `all 0.7s ${delay}s ease`,
   })
 
@@ -118,11 +126,15 @@ export default function Contact() {
             {/* Message */}
             <div style={{ marginBottom: '1.5rem' }}>
               <textarea
-                className="form-input"
+                className="form-input form-textarea"
                 placeholder="What's on your mind?"
-                rows={5}
                 value={form.message}
-                onChange={set('message')}
+                onChange={(e) => {
+                  set('message')(e)
+                  // Auto-resizing logic
+                  e.target.style.height = 'auto'
+                  e.target.style.height = `${e.target.scrollHeight}px`
+                }}
               />
               {errors.message && <p style={styles.err}>{errors.message}</p>}
             </div>
@@ -151,6 +163,20 @@ export default function Contact() {
           grid-template-columns: 1fr 1fr;
           gap: 1rem;
         }
+        .form-textarea {
+          resize: none;
+          min-height: 120px;
+          max-height: 300px;
+          overflow-y: auto;
+          box-sizing: border-box;
+        }
+        .form-textarea::-webkit-scrollbar {
+          width: 6px;
+        }
+        .form-textarea::-webkit-scrollbar-thumb {
+          background: rgba(212,169,106,0.3);
+          border-radius: 4px;
+        }
         @media (max-width: 540px) {
           .form-two-col { grid-template-columns: 1fr !important; }
         }
@@ -163,67 +189,67 @@ export default function Contact() {
 const styles = {
   heading: {
     fontFamily: '"Playfair Display", serif',
-    fontSize:   'clamp(2rem, 5vw, 3.5rem)',
-    color:      '#fff',
-    margin:     '1rem 0 0.75rem',
+    fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+    color: '#fff',
+    margin: '1rem 0 0.75rem',
     fontWeight: 700,
     lineHeight: 1.1,
   },
   sub: {
     fontFamily: '"Lora", serif',
-    fontSize:   '1rem',
-    color:      'rgba(255,255,255,0.45)',
-    fontStyle:  'italic',
-    marginTop:  '0.5rem',
+    fontSize: '1rem',
+    color: 'rgba(255,255,255,0.45)',
+    fontStyle: 'italic',
+    marginTop: '0.5rem',
   },
   linksRow: {
-    display:        'flex',
-    gap:            '2rem',
+    display: 'flex',
+    gap: '2rem',
     justifyContent: 'center',
-    flexWrap:       'wrap',
-    margin:         '2rem 0 0',
+    flexWrap: 'wrap',
+    margin: '2rem 0 0',
   },
   link: {
-    fontFamily:    '"DM Mono", monospace',
-    fontSize:      '0.75rem',
-    color:         'rgba(255,255,255,0.5)',
-    textDecoration:'none',
+    fontFamily: '"DM Mono", monospace',
+    fontSize: '0.75rem',
+    color: 'rgba(255,255,255,0.5)',
+    textDecoration: 'none',
     letterSpacing: '0.1em',
-    display:       'flex',
-    alignItems:    'center',
-    gap:           '0.4rem',
-    transition:    'color 0.2s',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.4rem',
+    transition: 'color 0.2s',
   },
   successBanner: {
-    background:   'rgba(126,184,164,0.12)',
-    border:       '1px solid rgba(126,184,164,0.3)',
+    background: 'rgba(126,184,164,0.12)',
+    border: '1px solid rgba(126,184,164,0.3)',
     borderRadius: '2px',
-    padding:      '0.85rem 1rem',
+    padding: '0.85rem 1rem',
     marginBottom: '1.5rem',
-    fontFamily:   '"DM Mono", monospace',
-    fontSize:     '0.72rem',
-    letterSpacing:'0.08em',
-    color:        '#7EB8A4',
-    textAlign:    'center',
+    fontFamily: '"DM Mono", monospace',
+    fontSize: '0.72rem',
+    letterSpacing: '0.08em',
+    color: '#7EB8A4',
+    textAlign: 'center',
   },
   err: {
     fontFamily: '"DM Mono", monospace',
-    fontSize:   '0.6rem',
-    color:      '#e07070',
-    marginTop:  '0.4rem',
+    fontSize: '0.6rem',
+    color: '#e07070',
+    marginTop: '0.4rem',
     letterSpacing: '0.06em',
   },
   submitBtn: {
-    padding:       '0.9rem 2.5rem',
-    color:         '#0A0A0A',
-    border:        'none',
-    cursor:        'pointer',
-    fontFamily:    '"DM Mono", monospace',
-    fontSize:      '0.75rem',
+    padding: '0.9rem 2.5rem',
+    color: '#0A0A0A',
+    border: 'none',
+    cursor: 'pointer',
+    fontFamily: '"DM Mono", monospace',
+    fontSize: '0.75rem',
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
-    fontWeight:    600,
-    transition:    'all 0.3s ease',
-    borderRadius:  '2px',
+    fontWeight: 600,
+    transition: 'all 0.3s ease',
+    borderRadius: '2px',
   },
 }

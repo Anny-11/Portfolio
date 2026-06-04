@@ -24,7 +24,7 @@ export default function App() {
       <Nav />
 
       {/* Page sections */}
-      <main>
+      <main className="main-content">
         <Hero />
         <About />
         <WorkExplorations />

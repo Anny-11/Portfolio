@@ -1,11 +1,25 @@
 // src/components/Skills.jsx
-import { useEffect, useRef } from 'react'
-import useInView              from '../hooks/useInView'
-import Label                  from './ui/Label'
-import skillGroups            from '../data/skills'
+import { useMemo } from 'react'
+import useInView   from '../hooks/useInView'
+import Label       from './ui/Label'
+import skillGroups from '../data/skills'
 
 export default function Skills() {
   const [ref, visible] = useInView()
+
+  // Group the skills category-wise instead of mixing them
+  const groupedCloud = useMemo(() => {
+    const flat = []
+    skillGroups.forEach(group => {
+      // Sort within the group by level (largest first) to make it look nice
+      const sortedSkills = [...group.skills].sort((a, b) => b.level - a.level)
+      sortedSkills.forEach(skill => {
+        flat.push({ ...skill, accent: group.accent, groupName: group.group })
+      })
+    })
+
+    return flat
+  }, [])
 
   return (
     <section
@@ -26,152 +40,133 @@ export default function Skills() {
         >
           <Label>Capabilities</Label>
           <h2 style={styles.heading}>
-            Skills &{' '}
-            <em style={{ color: '#D4A96A' }}>Where I'm at</em>
+            Not just lines of code.<br />
+            <em style={{ color: '#D4A96A' }}>Systems & Execution.</em>
           </h2>
           <p style={styles.sub}>
-            Honest about what I know, honest about what I'm still learning.
+            Visualizing my toolkit. The larger the bubble, the deeper my focus and proficiency.
           </p>
         </div>
 
-        {/* Three skill group columns */}
-        <div className="skills-columns">
-          {skillGroups.map((group) => (
-            <SkillGroup key={group.group} group={group} />
+        {/* Legend */}
+        <div style={styles.legendContainer}>
+          {skillGroups.map(group => (
+            <div key={group.group} style={styles.legendItem}>
+              <div style={{...styles.legendDot, background: group.accent}}></div>
+              <span>{group.group}</span>
+            </div>
           ))}
         </div>
+
+        {/* Cloud Container */}
+        <div className="skill-cloud">
+          {groupedCloud.map((item, i) => (
+            <SkillPill key={`${item.groupName}-${item.label}`} item={item} index={i} containerVisible={visible} />
+          ))}
+        </div>
+
       </div>
 
       <style>{`
-        .skills-columns {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 3.5rem;
+        .skill-cloud {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+          gap: 1.5rem;
+          padding: 2rem 0;
         }
-        @media (max-width: 900px) {
-          .skills-columns { grid-template-columns: 1fr !important; gap: 3rem !important; }
+
+        .skill-pill {
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+          cursor: default;
+          display: flex;
+          align-items: center;
+        }
+        
+        .skill-pill:hover {
+          transform: translateY(-8px) scale(1.05) !important;
+          z-index: 10;
+        }
+
+        .skill-val {
+          max-width: 0;
+          opacity: 0;
+          overflow: hidden;
+          display: inline-block;
+          white-space: nowrap;
+          transition: max-width 0.4s ease, opacity 0.3s ease, margin-left 0.3s ease;
+          font-family: "DM Mono", monospace;
+          font-weight: 600;
+          font-size: 0.8em;
+        }
+
+        .skill-pill:hover .skill-val {
+          max-width: 80px;
+          opacity: 1;
+          margin-left: 0.5em;
+        }
+
+        @media (max-width: 640px) {
+          .skill-cloud {
+            gap: 1rem;
+          }
         }
       `}</style>
     </section>
   )
 }
 
-/* ── Skill group (one column) ──────────────────────────── */
-function SkillGroup({ group }) {
-  const [ref, visible] = useInView(0.2)
-
-  return (
-    <div ref={ref}>
-      {/* Group label */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div
-          style={{
-            fontFamily:    '"DM Mono", monospace',
-            fontSize:      '0.65rem',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color:         group.accent,
-            marginBottom:  '0.5rem',
-          }}
-        >
-          {group.group}
-        </div>
-        <div
-          style={{
-            height:     '1px',
-            background: `linear-gradient(90deg, ${group.accent}60, transparent)`,
-          }}
-        />
-      </div>
-
-      {/* Skill bars */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {group.skills.map((skill, i) => (
-          <SkillBar
-            key={skill.label}
-            skill={skill}
-            index={i}
-            accent={group.accent}
-            groupVisible={visible}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ── Single skill bar ──────────────────────────────────── */
-function SkillBar({ skill, index, accent, groupVisible }) {
-  const fillRef = useRef(null)
-
-  useEffect(() => {
-    if (!fillRef.current) return
-    if (groupVisible) {
-      const timer = setTimeout(() => {
-        fillRef.current.style.width = `${skill.level}%`
-      }, index * 100)
-      return () => clearTimeout(timer)
-    }
-  }, [groupVisible, skill.level, index])
+/* ── Pill ──────────────────────────────────────────────── */
+function SkillPill({ item, index, containerVisible }) {
+  const [ref, visible] = useInView(0)
+  
+  // Dynamic scaling based on item.level (range 50 - 95 expected)
+  // Base level math so 50 is normal size, 95 is huge.
+  const scaleFactor = Math.max(0.7, (item.level / 100))
+  const fontSize = `${(scaleFactor * 1.5) + 0.2}rem`
+  const padVertical = `${scaleFactor * 0.8}rem`
+  const padHorizontal = `${scaleFactor * 1.6}rem`
 
   return (
     <div
+      className="skill-pill"
+      ref={ref}
       style={{
-        opacity:    groupVisible ? 1 : 0,
-        transform:  groupVisible ? 'none' : 'translateX(-16px)',
-        transition: `opacity 0.6s ${index * 0.08}s ease, transform 0.6s ${index * 0.08}s ease`,
+        opacity:    containerVisible ? 1 : 0,
+        transform:  containerVisible ? 'none' : 'scale(0.8) translateY(20px)',
+        transition: `opacity 0.6s ${index * 0.04}s ease, transform 0.6s ${index * 0.04}s cubic-bezier(0.175, 0.885, 0.32, 1.275)`,
+        
+        // Dynamic design
+        background: `linear-gradient(135deg, ${item.accent}15, ${item.accent}05)`,
+        border:     `1px solid ${item.accent}40`,
+        color:      item.level >= 80 ? '#fff' : 'rgba(255,255,255,0.8)',
+        
+        borderRadius: '100px',
+        fontSize:     `clamp(0.9rem, ${fontSize}, 2.5rem)`,
+        fontWeight:   item.level >= 85 ? 600 : 400,
+        fontFamily:   item.level >= 80 ? '"Playfair Display", serif' : '"DM Mono", monospace',
+        padding:      `clamp(0.5rem, ${padVertical}, 1.5rem) clamp(1rem, ${padHorizontal}, 3rem)`,
+        letterSpacing: item.level < 80 ? '0.05em' : 'normal',
+        
+        boxShadow:    `0 4px 20px -5px ${item.accent}00`,
+        backdropFilter: 'blur(4px)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = `0 10px 30px -10px ${item.accent}60`
+        e.currentTarget.style.borderColor = `${item.accent}80`
+        e.currentTarget.style.background = `linear-gradient(135deg, ${item.accent}30, ${item.accent}10)`
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = `0 4px 20px -5px ${item.accent}00`
+        e.currentTarget.style.borderColor = `${item.accent}40`
+        e.currentTarget.style.background = `linear-gradient(135deg, ${item.accent}15, ${item.accent}05)`
       }}
     >
-      {/* Label row */}
-      <div
-        style={{
-          display:        'flex',
-          justifyContent: 'space-between',
-          marginBottom:   '0.45rem',
-        }}
-      >
-        <span
-          style={{
-            fontFamily:    '"DM Mono", monospace',
-            fontSize:      '0.68rem',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            color:         'rgba(255,255,255,0.62)',
-          }}
-        >
-          {skill.label}
-        </span>
-        <span
-          style={{
-            fontFamily: '"DM Mono", monospace',
-            fontSize:   '0.68rem',
-            color:      accent,
-          }}
-        >
-          {skill.level}%
-        </span>
-      </div>
-
-      {/* Track */}
-      <div
-        style={{
-          height:       '2px',
-          background:   'rgba(255,255,255,0.08)',
-          borderRadius: '1px',
-          overflow:     'hidden',
-        }}
-      >
-        <div
-          ref={fillRef}
-          style={{
-            height:       '100%',
-            width:        '0%',
-            background:   accent,
-            borderRadius: '1px',
-            transition:   `width 1.2s cubic-bezier(0.23, 1, 0.32, 1)`,
-          }}
-        />
-      </div>
+      <span>{item.label}</span>
+      <span className="skill-val" style={{ color: item.accent }}>
+        {item.level}%
+      </span>
     </div>
   )
 }
@@ -191,4 +186,29 @@ const styles = {
     color:      'rgba(255,255,255,0.45)',
     fontStyle:  'italic',
   },
+  legendContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '1.5rem',
+    justifyContent: 'center',
+    marginBottom: '3rem',
+    padding: '1rem',
+    borderTop: '1px solid rgba(255,255,255,0.05)',
+    borderBottom: '1px solid rgba(255,255,255,0.05)',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontFamily: '"DM Mono", monospace',
+    fontSize: '0.75rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    color: 'rgba(255,255,255,0.6)',
+  },
+  legendDot: {
+    width: '10px',
+    height: '10px',
+    borderRadius: '50%',
+  }
 }

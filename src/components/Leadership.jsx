@@ -1,11 +1,21 @@
 // src/components/Leadership.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import useInView     from '../hooks/useInView'
 import Label         from './ui/Label'
 import leadership    from '../data/leadership'
 
 export default function Leadership() {
   const [ref, visible] = useInView()
+  const [selectedItem, setSelectedItem] = useState(null)
+
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    if (selectedItem) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }, [selectedItem])
 
   return (
     <section
@@ -34,17 +44,64 @@ export default function Leadership() {
           </h2>
           <p style={styles.sub}>
             Real experience in coordination, communication, and getting things
-            done with teams.
+            done with teams. Tap a card to see more details.
           </p>
         </div>
 
         {/* Cards */}
         <div className="leadership-grid">
           {leadership.map((item, i) => (
-            <LeadershipCard key={item.id} item={item} index={i} />
+            <LeadershipCard key={item.id} item={item} index={i} onClick={() => setSelectedItem(item)} />
           ))}
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedItem && (
+        <div style={styles.modalOverlay} onClick={() => setSelectedItem(null)}>
+          <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <button style={styles.closeButton} onClick={() => setSelectedItem(null)}>
+              ✕
+            </button>
+            <div style={styles.modalBody}>
+              <h3 style={{...styles.role, fontSize: '2rem', marginBottom: '0.5rem', lineHeight: 1.2}}>{selectedItem.role}</h3>
+              <div style={{...styles.period, fontSize: '1rem', marginBottom: '1.5rem', whiteSpace: 'normal', display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center'}}>
+                {selectedItem.link && selectedItem.link !== '#' ? (
+                  <a href={selectedItem.link} target="_blank" rel="noreferrer" style={{ color: selectedItem.accent, textDecoration: 'underline' }}>{selectedItem.org}</a>
+                ) : (
+                  <span style={{ color: selectedItem.accent }}>{selectedItem.org}</span>
+                )}
+                <span style={{ opacity: 0.5 }}>|</span> <span>{selectedItem.period}</span>
+              </div>
+              
+              <p style={{...styles.summary, fontSize: '1.05rem', color: '#fff'}}>{selectedItem.summary}</p>
+              
+              {selectedItem.details && selectedItem.details.length > 0 && (
+                <ul style={styles.detailsList}>
+                  {selectedItem.details.map((detail, idx) => (
+                    <li key={idx} style={{ marginBottom: '0.8rem' }}>{detail}</li>
+                  ))}
+                </ul>
+              )}
+
+              {selectedItem.images && selectedItem.images.length > 0 && (
+                <div style={styles.imageGrid}>
+                  {selectedItem.images.map((imgUrl, idx) => (
+                    <div key={idx} style={styles.imageWrapper}>
+                      <img src={imgUrl} alt={`Event ${idx}`} style={styles.eventImage} />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{...styles.takeawayBox, marginTop: '2rem', background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '8px'}}>
+                <div style={styles.takeawayLabel}>Key takeaway</div>
+                <p style={{...styles.takeawayQuote, fontSize: '1.1rem'}}>"{selectedItem.impact}"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         .leadership-grid {
@@ -55,13 +112,21 @@ export default function Leadership() {
         @media (max-width: 640px) {
           .leadership-grid { grid-template-columns: 1fr !important; }
         }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
       `}</style>
     </section>
   )
 }
 
 /* ── Card ──────────────────────────────────────────────── */
-function LeadershipCard({ item, index }) {
+function LeadershipCard({ item, index, onClick }) {
   const [cardRef, visible] = useInView()
   const [hovered, setHovered] = useState(false)
 
@@ -70,16 +135,18 @@ function LeadershipCard({ item, index }) {
       ref={cardRef}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={onClick}
       style={{
         opacity:      visible ? 1 : 0,
         transform:    visible ? 'none' : 'translateY(40px)',
-        transition:   `opacity 0.7s ${index * 0.15}s ease, transform 0.7s ${index * 0.15}s ease`,
-        background:   'rgba(255,255,255,0.03)',
-        border:       '1px solid rgba(255,255,255,0.07)',
+        transition:   `opacity 0.7s ${index * 0.15}s ease, transform 0.7s ${index * 0.15}s ease, border-color 0.3s ease, background 0.3s ease`,
+        background:   hovered ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.03)',
+        border:       `1px solid rgba(255,255,255,${hovered ? '0.15' : '0.07'})`,
         borderRadius: '4px',
         padding:      '2.25rem',
         position:     'relative',
         overflow:     'hidden',
+        cursor:       'pointer',
       }}
     >
       {/* Left colour bar */}
@@ -90,10 +157,10 @@ function LeadershipCard({ item, index }) {
           left:       0,
           top:        0,
           bottom:     0,
-          width:      '3px',
+          width:      hovered ? '4px' : '3px',
           background: item.accent,
           opacity:    hovered ? 1 : 0.25,
-          transition: 'opacity 0.3s ease',
+          transition: 'all 0.3s ease',
         }}
       />
 
@@ -118,21 +185,38 @@ function LeadershipCard({ item, index }) {
           fontFamily:    '"DM Mono", monospace',
           fontSize:      '0.62rem',
           letterSpacing: '0.12em',
-          color:         item.accent,
           textTransform: 'uppercase',
           marginBottom:  '1.1rem',
         }}
+        onClick={(e) => {
+          if (item.link && item.link !== '#') e.stopPropagation();
+        }}
       >
-        {item.org}
+        {item.link && item.link !== '#' ? (
+          <a
+            href={item.link}
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              color: item.accent,
+              textDecoration: 'none',
+              transition: 'opacity 0.2s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = 0.7)}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = 1)}
+          >
+            {item.org} ↗
+          </a>
+        ) : (
+          <span style={{ color: item.accent }}>{item.org}</span>
+        )}
       </div>
 
       {/* Summary */}
       <p style={styles.summary}>{item.summary}</p>
 
-      {/* Key takeaway */}
-      <div style={styles.takeawayBox}>
-        <div style={styles.takeawayLabel}>Key takeaway</div>
-        <p style={styles.takeawayQuote}>"{item.impact}"</p>
+      <div style={{ marginTop: 'auto', paddingTop: '1rem', fontSize: '0.8rem', fontStyle: 'italic', transition: 'color 0.3s ease', color: hovered ? '#fff' : 'rgba(255,255,255,0.4)' }}>
+        Tap to view details ➔
       </div>
     </div>
   )
@@ -195,4 +279,71 @@ const styles = {
     color:       'rgba(255,255,255,0.65)',
     margin:      0,
   },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    backdropFilter: 'blur(5px)',
+    zIndex: 9999,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2rem',
+    animation: 'fadeIn 0.3s ease',
+  },
+  modalContent: {
+    position: 'relative',
+    background: '#111',
+    border: '1px solid rgba(255,255,255,0.1)',
+    borderRadius: '12px',
+    maxWidth: '800px',
+    width: '100%',
+    maxHeight: '90vh',
+    overflowY: 'auto',
+    padding: '3rem',
+    boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+    animation: 'slideUp 0.3s ease',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: '1.5rem',
+    right: '1.5rem',
+    background: 'none',
+    border: 'none',
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: '1.5rem',
+    cursor: 'pointer',
+    transition: 'color 0.2s',
+  },
+  detailsList: {
+    color: 'rgba(255,255,255,0.7)',
+    fontFamily: '"Lora", serif',
+    fontSize: '1rem',
+    lineHeight: 1.8,
+    paddingLeft: '1.5rem',
+    marginBottom: '2rem',
+  },
+  imageGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '1rem',
+    marginTop: '2rem',
+  },
+  imageWrapper: {
+    width: '100%',
+    aspectRatio: '16/9',
+    overflow: 'hidden',
+    borderRadius: '8px',
+    border: '1px solid rgba(255,255,255,0.1)',
+  },
+  eventImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    transition: 'transform 0.5s ease',
+  }
 }
+

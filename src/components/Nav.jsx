@@ -2,13 +2,41 @@
 import { useState, useEffect } from 'react'
 
 const NAV_LINKS = [
-  { label: 'About', id: 'about' },
-  { label: 'Work', id: 'work' },
-  { label: 'Figma', id: 'figma' },
-  { label: 'Thinking', id: 'thinking' },
-  { label: 'Skills', id: 'skills' },
-  { label: 'Leadership', id: 'leadership' },
-  { label: 'Contact', id: 'contact' },
+  { 
+    label: 'About', 
+    id: 'about',
+    icon: <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>
+  },
+  { 
+    label: 'Work', 
+    id: 'work',
+    icon: <><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></>
+  },
+  { 
+    label: 'Figma', 
+    id: 'figma',
+    icon: <><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></>
+  },
+  { 
+    label: 'Thinking', 
+    id: 'thinking',
+    icon: <><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></>
+  },
+  { 
+    label: 'Skills', 
+    id: 'skills',
+    icon: <><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></>
+  },
+  { 
+    label: 'Leadership', 
+    id: 'leadership',
+    icon: <><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></>
+  },
+  { 
+    label: 'Contact', 
+    id: 'contact',
+    icon: <><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></>
+  },
 ]
 
 function scrollTo(id) {
@@ -17,43 +45,40 @@ function scrollTo(id) {
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [activeId, setActiveId] = useState('')
   const [hoveredId, setHoveredId] = useState(null)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    const handleScroll = () => {
+      // Background shift for navbar
+      setScrolled(window.scrollY > 40)
+      
+      // Scroll spy logic for active highlighting
+      const scrollY = window.scrollY + window.innerHeight / 3
+      let current = ''
+      for (let i = NAV_LINKS.length - 1; i >= 0; i--) {
+        const el = document.getElementById(NAV_LINKS[i].id)
+        if (el && el.offsetTop <= scrollY) {
+          current = NAV_LINKS[i].id
+          break
+        }
+      }
+      setActiveId(current)
+    }
 
-  const handleNav = (id) => {
-    scrollTo(id)
-    setMenuOpen(false)
-  }
+    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <>
-      <nav
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          padding: '0 clamp(1.5rem, 5vw, 4rem)',
-          height: '64px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          background: scrolled ? 'rgba(10,10,10,0.88)' : 'transparent',
-          borderBottom: scrolled ? '1px solid rgba(255,255,255,0.06)' : 'none',
-          transition: 'all 0.4s ease',
-        }}
-      >
-        {/* Logo */}
+      {/* UNIFIED TOP NAVBAR */}
+      <nav className={`nav-container ${scrolled ? 'scrolled' : ''}`}>
+        {/* Left: Logo */}
         <button
           onClick={() => scrollTo('hero')}
+          className="logo-btn"
           style={{
             background: 'none',
             border: 'none',
@@ -64,20 +89,18 @@ export default function Nav() {
             color: '#D4A96A',
             fontWeight: 500,
             padding: 0,
+            flexShrink: 0,
           }}
         >
           Anny.
         </button>
 
-        {/* Desktop links */}
-        <div
-          style={{ display: 'flex', gap: '2rem' }}
-          className="nav-desktop-links"
-        >
+        {/* Right: Desktop Text Links */}
+        <div style={{ display: 'flex', gap: '2rem' }} className="nav-desktop-links">
           {NAV_LINKS.map(({ label, id }) => (
             <button
               key={id}
-              onClick={() => handleNav(id)}
+              onClick={() => scrollTo(id)}
               onMouseEnter={() => setHoveredId(id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{
@@ -88,9 +111,10 @@ export default function Nav() {
                 fontSize: '0.65rem',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                color: hoveredId === id ? '#D4A96A' : 'rgba(255,255,255,0.5)',
-                transition: 'color 0.2s',
-                padding: 0,
+                color: hoveredId === id || activeId === id ? '#D4A96A' : 'rgba(255,255,255,0.5)',
+                transition: 'all 0.2s',
+                padding: '0.25rem 0',
+                borderBottom: hoveredId === id || activeId === id ? '1px solid #D4A96A' : '1px solid transparent',
               }}
             >
               {label}
@@ -98,80 +122,121 @@ export default function Nav() {
           ))}
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          onClick={() => setMenuOpen((o) => !o)}
-          className="nav-mobile-btn"
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: '#fff',
-            padding: 0,
-            display: 'none',
-          }}
-          aria-label="Toggle menu"
-        >
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-            {menuOpen ? (
-              <path
-                d="M4 4L18 18M18 4L4 18"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            ) : (
-              <>
-                <line x1="3" y1="7" x2="19" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                <line x1="3" y1="15" x2="19" y2="15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </>
-            )}
-          </svg>
-        </button>
+        {/* Right: Mobile Icon Links (Unified inside the same navbar) */}
+        <div className="nav-mobile-icons">
+          {NAV_LINKS.map(({ label, id, icon }) => {
+            const isActive = activeId === id
+            return (
+              <button
+                key={id}
+                className="icon-link-btn"
+                onClick={() => scrollTo(id)}
+                title={label} /* Built-in hover tooltip */
+                aria-label={label}
+              >
+                <div className={`icon-container ${isActive ? 'active' : ''}`}>
+                  <svg 
+                    width="18" height="18" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="1.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    {icon}
+                  </svg>
+                </div>
+              </button>
+            )
+          })}
+        </div>
       </nav>
 
-      {/* Mobile fullscreen menu */}
-      {menuOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            top: '64px',
-            background: 'rgba(10,10,10,0.97)',
-            backdropFilter: 'blur(20px)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '2rem',
-            zIndex: 99,
-          }}
-        >
-          {NAV_LINKS.map(({ label, id }) => (
-            <button
-              key={id}
-              onClick={() => handleNav(id)}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontFamily: '"Playfair Display", serif',
-                fontSize: '1.75rem',
-                color: 'rgba(255,255,255,0.85)',
-                letterSpacing: '0.02em',
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Responsive styles injected once */}
+      {/* Responsive styles */}
       <style>{`
+        /* Desktop Top Navbar layout */
+        .nav-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 100;
+          padding: 0 clamp(1.5rem, 5vw, 4rem);
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: all 0.4s ease;
+          background: transparent;
+          border-bottom: 1px solid transparent;
+        }
+
+        .nav-container.scrolled {
+          backdrop-filter: blur(20px);
+          background: rgba(10,10,10,0.88);
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* Hide mobile icons on PC */
+        .nav-mobile-icons {
+          display: none;
+        }
+
         @media (max-width: 768px) {
-          .nav-desktop-links { display: none !important; }
-          .nav-mobile-btn    { display: block !important; }
+          /* Hide desktop text links on Mobile */
+          .nav-desktop-links { 
+            display: none !important; 
+          }
+          
+          /* Tighten up mobile padding */
+          .nav-container {
+            padding: 0 1rem;
+            gap: 1rem;
+          }
+
+          /* Show mobile icons, housed within the top bar on the right */
+          .nav-mobile-icons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            overflow-x: auto;
+            flex-grow: 1;
+            justify-content: flex-end;
+            /* Hide scrollbar */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .nav-mobile-icons::-webkit-scrollbar {
+            display: none;
+          }
+
+          .icon-link-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            flex-shrink: 0;
+          }
+
+          .icon-container {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(10,10,10,0.5);
+            color: rgba(255,255,255,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+          }
+
+          .icon-container.active {
+            color: #111;
+            background: #D4A96A;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(212,169,106,0.3);
+          }
         }
       `}</style>
     </>
