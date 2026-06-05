@@ -47,6 +47,7 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [activeId, setActiveId] = useState('')
   const [hoveredId, setHoveredId] = useState(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,9 +96,9 @@ export default function Nav() {
           Anny.
         </button>
 
-        {/* Right: Desktop Text Links */}
-        <div style={{ display: 'flex', gap: '2rem' }} className="nav-desktop-links">
-          {NAV_LINKS.map(({ label, id }) => (
+        {/* Right: Desktop Text Links (with Icons next to them) */}
+        <div style={{ display: 'flex', gap: '1.75rem' }} className="nav-desktop-links">
+          {NAV_LINKS.map(({ label, id, icon }) => (
             <button
               key={id}
               onClick={() => scrollTo(id)}
@@ -108,50 +109,101 @@ export default function Nav() {
                 border: 'none',
                 cursor: 'pointer',
                 fontFamily: '"DM Mono", monospace',
-                fontSize: '0.65rem',
-                letterSpacing: '0.1em',
+                fontSize: '0.62rem',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: hoveredId === id || activeId === id ? '#D4A96A' : 'rgba(255,255,255,0.5)',
                 transition: 'all 0.2s',
                 padding: '0.25rem 0',
                 borderBottom: hoveredId === id || activeId === id ? '1px solid #D4A96A' : '1px solid transparent',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
               }}
             >
-              {label}
+              <svg 
+                width="14" height="14" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="1.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                {icon}
+              </svg>
+              <span>{label}</span>
             </button>
           ))}
         </div>
 
-        {/* Right: Mobile Icon Links (Unified inside the same navbar) */}
-        <div className="nav-mobile-icons">
-          {NAV_LINKS.map(({ label, id, icon }) => {
-            const isActive = activeId === id
-            return (
+        {/* Right Mobile Menu Trigger Button (3 Dots) */}
+        <button
+          className="mobile-menu-trigger"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: '#D4A96A',
+            padding: '0.5rem',
+            display: 'none', // Managed by responsive CSS below
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="5" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <circle cx="12" cy="19" r="2"/>
+          </svg>
+        </button>
+      </nav>
+
+      {/* Mobile Sidebar Menu Drawer Overlay */}
+      <div 
+        className={`mobile-drawer ${mobileMenuOpen ? 'open' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <div className="mobile-drawer-content" onClick={e => e.stopPropagation()}>
+          <button 
+            className="mobile-drawer-close"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            ✕
+          </button>
+          
+          <div className="mobile-drawer-links">
+            {NAV_LINKS.map(({ label, id, icon }) => (
               <button
                 key={id}
-                className="icon-link-btn"
-                onClick={() => scrollTo(id)}
-                title={label} /* Built-in hover tooltip */
-                aria-label={label}
+                onClick={() => {
+                  scrollTo(id)
+                  setMobileMenuOpen(false)
+                }}
+                className={`mobile-drawer-link-btn ${activeId === id ? 'active' : ''}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                }}
               >
-                <div className={`icon-container ${isActive ? 'active' : ''}`}>
-                  <svg 
-                    width="18" height="18" 
-                    viewBox="0 0 24 24" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    strokeWidth="1.5" 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round"
-                  >
-                    {icon}
-                  </svg>
-                </div>
+                <svg 
+                  width="16" height="16" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  {icon}
+                </svg>
+                <span>{label}</span>
               </button>
-            )
-          })}
+            ))}
+          </div>
         </div>
-      </nav>
+      </div>
 
       {/* Responsive styles */}
       <style>{`
@@ -178,64 +230,105 @@ export default function Nav() {
           border-bottom: 1px solid rgba(255,255,255,0.06);
         }
 
-        /* Hide mobile icons on PC */
-        .nav-mobile-icons {
-          display: none;
+        /* Mobile drawer background overlay */
+        .mobile-drawer {
+          position: fixed;
+          inset: 0;
+          z-index: 999;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(5px);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.35s ease;
+        }
+        
+        .mobile-drawer.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        
+        /* Drawer sidebar slide element */
+        .mobile-drawer-content {
+          position: fixed;
+          top: 0;
+          right: -300px;
+          bottom: 0;
+          width: 280px;
+          background: #0A0A0A;
+          border-left: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 3rem 2rem;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .mobile-drawer.open .mobile-drawer-content {
+          right: 0;
+        }
+        
+        .mobile-drawer-close {
+          align-self: flex-end;
+          background: none;
+          border: none;
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 1.5rem;
+          cursor: pointer;
+          padding: 0;
+          transition: color 0.2s;
         }
 
-        @media (max-width: 768px) {
-          /* Hide desktop text links on Mobile */
+        .mobile-drawer-close:hover {
+          color: #D4A96A;
+        }
+        
+        .mobile-drawer-links {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+          margin-top: 2rem;
+        }
+        
+        .mobile-drawer-link-btn {
+          background: none;
+          border: none;
+          text-align: left;
+          font-family: "DM Mono", monospace;
+          font-size: 0.95rem;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: rgba(255, 255, 255, 0.5);
+          padding: 0.75rem 0;
+          cursor: pointer;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+          transition: all 0.25s ease;
+        }
+
+        .mobile-drawer-link-btn:hover {
+          color: #fff;
+          padding-left: 0.25rem;
+        }
+        
+        .mobile-drawer-link-btn.active {
+          color: #D4A96A;
+          border-bottom-color: #D4A96A;
+          padding-left: 0.5rem;
+        }
+
+        @media (max-width: 992px) {
+          /* Hide desktop text links on Mobile/Tablet */
           .nav-desktop-links { 
             display: none !important; 
           }
           
           /* Tighten up mobile padding */
           .nav-container {
-            padding: 0 1rem;
-            gap: 1rem;
+            padding: 0 1.5rem;
           }
 
-          /* Show mobile icons, housed within the top bar on the right */
-          .nav-mobile-icons {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            overflow-x: auto;
-            flex-grow: 1;
-            justify-content: flex-end;
-            /* Hide scrollbar */
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-          .nav-mobile-icons::-webkit-scrollbar {
-            display: none;
-          }
-
-          .icon-link-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            flex-shrink: 0;
-          }
-
-          .icon-container {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(10,10,10,0.5);
-            color: rgba(255,255,255,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-          }
-
-          .icon-container.active {
-            color: #111;
-            background: #D4A96A;
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(212,169,106,0.3);
+          /* Show mobile menu trigger button */
+          .mobile-menu-trigger {
+            display: block !important;
           }
         }
       `}</style>

@@ -157,6 +157,7 @@ const styles = {
     fontSize: '1.05rem',
     lineHeight: 1.9,
     color: 'rgba(255,255,255,0.6)',
+    textAlign: 'justify',
   },
   infoKey: {
     fontFamily: '"DM Mono", monospace',

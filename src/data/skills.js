@@ -1,37 +1,48 @@
 // ─────────────────────────────────────────────────────────────
 // Skills data
-// Grouped by category.
+// Restructured to associate skill bubbles directly under exploring areas.
 // ─────────────────────────────────────────────────────────────
 
-const skillGroups = [
+export const exploringAreas = [
   {
-    group: 'Product & UX',
-    accent: '#D4A96A', // Goldish
+    title: 'Product Management',
+    desc: 'Understanding user needs, problem discovery, and how products evolve from ideas to real-world solutions.',
+    accent: '#D4A96A',
     skills: [
-      { label: 'User Research', level: 90 },
-      { label: 'Wireframing', level: 85 },
-      { label: 'Figma', level: 80 },
-      { label: 'Canva', level: 85 },
-    ],
+      { label: 'Product Management', accent: '#D4A96A' },
+      { label: 'User Research', accent: '#D4A96A' },
+      { label: 'Problem Solving', accent: '#D4A96A' }
+    ]
   },
   {
-    group: 'Tools',
-    accent: '#B8A0D4', // Purpleish
+    title: 'Product Design & UX',
+    desc: 'Exploring user flows, wireframes, and designing experiences that feel intuitive and useful.',
+    accent: '#7EB8A4',
     skills: [
-      { label: 'Excel', level: 90 },
-      { label: 'PowerPoint', level: 85 },
-      { label: 'Power BI', level: 95 },
-    ],
+      { label: 'Figma', accent: '#7EB8A4' },
+      { label: 'Wireframing', accent: '#7EB8A4' },
+      { label: 'Canva', accent: '#7EB8A4' }
+    ]
   },
   {
-    group: 'Technical',
-    accent: '#5B8FB9', // Blueish
+    title: 'Research & Analysis',
+    desc: 'Learning how to gather insights, identify patterns, and make informed decisions through research.',
+    accent: '#5B8FB9',
     skills: [
-      { label: 'Python', level: 90 },
-      { label: 'SQL', level: 85 },
-      { label: 'React', level: 65 },
-    ],
+      { label: 'Excel', accent: '#5B8FB9' },
+      { label: 'SQL', accent: '#5B8FB9' },
+      { label: 'Power BI', accent: '#5B8FB9' }
+    ]
   },
+  {
+    title: 'Technical Foundations',
+    desc: 'Building enough technical understanding to collaborate effectively and bring ideas to life.',
+    accent: '#B8A0D4',
+    skills: [
+      { label: 'SQL', accent: '#B8A0D4' },
+      { label: 'React', accent: '#B8A0D4' },
+      { label: 'Python', accent: '#B8A0D4' },
+      { label: 'C++', accent: '#B8A0D4' }
+    ]
+  }
 ]
-
-export default skillGroups

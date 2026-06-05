@@ -30,31 +30,36 @@ export default function HowIWork() {
         
         {/* 3-Box Grid */}
         <div style={styles.grid}>
-          {/* Box 1: Questions */}
+          {/* Box 1: Notice */}
           <div style={styles.card}>
-            <h3 style={styles.cardTitle}>It starts with a question.</h3>
-            <ul style={styles.questionList}>
-              <li style={styles.questionItem}>Why do notes get lost in chats?</li>
-              <li style={styles.questionItem}>Why does obstacle detection stop at detection?</li>
-              <li style={styles.questionItem}>Why can't multiple tasks run the way I need them to?</li>
-            </ul>
+            <h3 style={styles.cardTitle}>Notice</h3>
+            <p style={styles.para}>
+              Most of my projects begin with a frustration, limitation, or question I encounter in everyday life.
+            </p>
           </div>
 
-          {/* Box 2: Exploration */}
+          {/* Box 2: Explore */}
           <div style={styles.card}>
-            <h3 style={styles.cardTitle}>Then comes exploration.</h3>
+            <h3 style={styles.cardTitle}>Explore</h3>
             <p style={styles.para}>
-              I break the problem down, think through edge cases, sketch possible solutions, and try to understand what people actually need.
+              I spend time understanding the problem, questioning assumptions, and sketching possible solutions before jumping into implementation.
             </p>
           </div>
 
           {/* Box 3: Build */}
           <div style={styles.card}>
-            <h3 style={styles.cardTitle}>Then I build.</h3>
+            <h3 style={styles.cardTitle}>Build</h3>
             <p style={styles.para}>
-              Using technology and AI-assisted tools, I turn ideas into prototypes and test whether the solution genuinely solves the original problem.
+              I use technology and AI-assisted tools to turn ideas into prototypes and learn through iteration.
             </p>
           </div>
+        </div>
+
+        {/* Highlighted Quote at Bottom */}
+        <div style={styles.quoteWrapper}>
+          <p style={styles.quoteText}>
+            "I don't usually start with code. I start with a problem."
+          </p>
         </div>
       </div>
     </section>
@@ -92,25 +97,27 @@ const styles = {
     color: '#D4A96A',
     margin: 0,
   },
-  questionList: {
-    margin: 0,
-    paddingLeft: '1.25rem',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.85rem',
-  },
-  questionItem: {
-    fontFamily: '"Lora", serif',
-    fontSize: '1rem',
-    color: 'rgba(255,255,255,0.7)',
-    fontStyle: 'italic',
-    lineHeight: 1.5,
-  },
   para: {
     fontFamily: '"Lora", serif',
     fontSize: '1.02rem',
     lineHeight: 1.8,
     color: 'rgba(255,255,255,0.65)',
     margin: 0,
+    textAlign: 'justify',
+  },
+  quoteWrapper: {
+    marginTop: '4rem',
+    borderTop: '1px solid rgba(255,255,255,0.05)',
+    paddingTop: '3rem',
+    textAlign: 'center',
+  },
+  quoteText: {
+    fontFamily: '"Lora", serif',
+    fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
+    fontStyle: 'italic',
+    color: '#fff',
+    margin: 0,
+    opacity: 0.85,
+    lineHeight: 1.5,
   },
 }

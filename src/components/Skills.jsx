@@ -1,25 +1,10 @@
 // src/components/Skills.jsx
-import { useMemo } from 'react'
-import useInView   from '../hooks/useInView'
-import Label       from './ui/Label'
-import skillGroups from '../data/skills'
+import useInView from '../hooks/useInView'
+import Label from './ui/Label'
+import { exploringAreas } from '../data/skills'
 
 export default function Skills() {
   const [ref, visible] = useInView()
-
-  // Group the skills category-wise instead of mixing them
-  const groupedCloud = useMemo(() => {
-    const flat = []
-    skillGroups.forEach(group => {
-      // Sort within the group by level (largest first) to make it look nice
-      const sortedSkills = [...group.skills].sort((a, b) => b.level - a.level)
-      sortedSkills.forEach(skill => {
-        flat.push({ ...skill, accent: group.accent, groupName: group.group })
-      })
-    })
-
-    return flat
-  }, [])
 
   return (
     <section
@@ -27,128 +12,162 @@ export default function Skills() {
       style={{ padding: 'clamp(5rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem)' }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-
+        
         {/* Header */}
         <div
           ref={ref}
           style={{
-            marginBottom: '3.5rem',
-            opacity:      visible ? 1 : 0,
-            transform:    visible ? 'none' : 'translateY(30px)',
-            transition:   'all 0.7s ease',
+            marginBottom: '4rem',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'none' : 'translateY(30px)',
+            transition: 'all 0.7s ease',
           }}
         >
-          <Label>Capabilities</Label>
+          <Label>Areas of Focus & Interests</Label>
           <h2 style={styles.heading}>
-            Not just lines of code.<br />
-            <em style={{ color: '#D4A96A' }}>Systems & Execution.</em>
+            Mindset, Design &<br />
+            <em style={{ color: '#D4A96A' }}>Technical Foundations.</em>
           </h2>
           <p style={styles.sub}>
-            Visualizing my toolkit. The larger the bubble, the deeper my focus and proficiency.
+            Exploring user needs, system architectures, and the toolkits that bridge them.
           </p>
         </div>
 
-        {/* Legend */}
-        <div style={styles.legendContainer}>
-          {skillGroups.map(group => (
-            <div key={group.group} style={styles.legendItem}>
-              <div style={{...styles.legendDot, background: group.accent}}></div>
-              <span>{group.group}</span>
-            </div>
-          ))}
-        </div>
+        {/* Merged Exploring Grid */}
+        <div 
+          className="exploring-grid" 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))',
+            gap: '2rem',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'none' : 'translateY(40px)',
+            transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s',
+          }}
+        >
+          {exploringAreas.map((area, idx) => (
+            <div 
+              key={area.title} 
+              className="exploring-card"
+              style={{
+                padding: '2rem',
+                borderRadius: '16px',
+                background: 'rgba(255, 255, 255, 0.02)',
+                borderLeft: `4px solid ${area.accent}`,
+                borderTop: '1px solid rgba(255,255,255,0.03)',
+                borderRight: '1px solid rgba(255,255,255,0.03)',
+                borderBottom: '1px solid rgba(255,255,255,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '1.5rem',
+                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                e.currentTarget.style.borderColor = `${area.accent}40`
+                e.currentTarget.style.transform = 'translateY(-5px)'
+                e.currentTarget.style.boxShadow = `0 12px 40px -10px ${area.accent}20`
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)'
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.03)'
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)'
+              }}
+            >
+              <div>
+                <h3 style={{
+                  fontFamily: '"Playfair Display", serif',
+                  fontSize: '1.35rem',
+                  color: '#fff',
+                  margin: '0 0 0.75rem 0',
+                  fontWeight: 600,
+                  letterSpacing: '0.02em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  {area.title}
+                </h3>
+                <p style={{
+                  fontFamily: '"Lora", serif',
+                  fontSize: '0.95rem',
+                  color: 'rgba(255, 255, 255, 0.65)',
+                  margin: 0,
+                  lineHeight: '1.6',
+                  textAlign: 'justify'
+                }}>
+                  {area.desc}
+                </p>
+              </div>
 
-        {/* Cloud Container */}
-        <div className="skill-cloud">
-          {groupedCloud.map((item, i) => (
-            <SkillPill key={`${item.groupName}-${item.label}`} item={item} index={i} containerVisible={visible} />
+              {/* Skills/Bubbles Container */}
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '0.65rem',
+                marginTop: '0.5rem',
+              }}>
+                {area.skills.map((skill) => (
+                  <div
+                    key={skill.label}
+                    className="skill-pill"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      background: `linear-gradient(135deg, ${skill.accent}12, ${skill.accent}04)`,
+                      border: `1px solid ${skill.accent}30`,
+                      borderRadius: '100px',
+                      color: 'rgba(255, 255, 255, 0.85)',
+                      fontFamily: '"Lora", serif',
+                      fontSize: '0.85rem',
+                      fontWeight: '500',
+                      padding: '0.45rem 0.95rem',
+                      transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                      cursor: 'default',
+                      backdropFilter: 'blur(4px)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = `${skill.accent}70`
+                      e.currentTarget.style.background = `linear-gradient(135deg, ${skill.accent}20, ${skill.accent}08)`
+                      e.currentTarget.style.color = '#fff'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = `${skill.accent}30`
+                      e.currentTarget.style.background = `linear-gradient(135deg, ${skill.accent}12, ${skill.accent}04)`
+                      e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)'
+                    }}
+                  >
+                    <span style={{ 
+                      marginRight: '6px', 
+                      display: 'inline-block', 
+                      width: '5px', 
+                      height: '5px', 
+                      borderRadius: '50%', 
+                      background: skill.accent 
+                    }}></span>
+                    {skill.label}
+                  </div>
+                ))}
+              </div>
+
+            </div>
           ))}
         </div>
 
       </div>
 
       <style>{`
-        .skill-cloud {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          align-items: center;
-          gap: 1.5rem;
-          padding: 2rem 0;
-        }
-
-        .skill-pill {
-          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-          cursor: default;
-          display: flex;
-          align-items: center;
-        }
-        
-        .skill-pill:hover {
-          transform: translateY(-8px) scale(1.05) !important;
-          z-index: 10;
-        }
-
-
-
-        @media (max-width: 640px) {
-          .skill-cloud {
-            gap: 1rem;
+        @media (max-width: 1024px) {
+          .exploring-grid {
+            grid-template-columns: 1fr !important;
           }
         }
       `}</style>
     </section>
-  )
-}
-
-/* ── Pill ──────────────────────────────────────────────── */
-function SkillPill({ item, index, containerVisible }) {
-  const [ref, visible] = useInView(0)
-  
-  // Dynamic scaling based on item.level (range 50 - 95 expected)
-  // Base level math so 50 is normal size, 95 is huge.
-  const scaleFactor = Math.max(0.7, (item.level / 100))
-  const fontSize = `${(scaleFactor * 1.5) + 0.2}rem`
-  const padVertical = `${scaleFactor * 0.8}rem`
-  const padHorizontal = `${scaleFactor * 1.6}rem`
-
-  return (
-    <div
-      className="skill-pill"
-      ref={ref}
-      style={{
-        opacity:    containerVisible ? 1 : 0,
-        transform:  containerVisible ? 'none' : 'scale(0.8) translateY(20px)',
-        transition: `opacity 0.6s ${index * 0.04}s ease, transform 0.6s ${index * 0.04}s cubic-bezier(0.175, 0.885, 0.32, 1.275)`,
-        
-        // Dynamic design
-        background: `linear-gradient(135deg, ${item.accent}15, ${item.accent}05)`,
-        border:     `1px solid ${item.accent}40`,
-        color:      item.level >= 80 ? '#fff' : 'rgba(255,255,255,0.8)',
-        
-        borderRadius: '100px',
-        fontSize:     `clamp(0.9rem, ${fontSize}, 2.5rem)`,
-        fontWeight:   item.level >= 85 ? 600 : 400,
-        fontFamily:   item.level >= 80 ? '"Playfair Display", serif' : '"DM Mono", monospace',
-        padding:      `clamp(0.5rem, ${padVertical}, 1.5rem) clamp(1rem, ${padHorizontal}, 3rem)`,
-        letterSpacing: item.level < 80 ? '0.05em' : 'normal',
-        
-        boxShadow:    `0 4px 20px -5px ${item.accent}00`,
-        backdropFilter: 'blur(4px)',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = `0 10px 30px -10px ${item.accent}60`
-        e.currentTarget.style.borderColor = `${item.accent}80`
-        e.currentTarget.style.background = `linear-gradient(135deg, ${item.accent}30, ${item.accent}10)`
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = `0 4px 20px -5px ${item.accent}00`
-        e.currentTarget.style.borderColor = `${item.accent}40`
-        e.currentTarget.style.background = `linear-gradient(135deg, ${item.accent}15, ${item.accent}05)`
-      }}
-    >
-      <span>{item.label}</span>
-    </div>
   )
 }
 
@@ -166,30 +185,6 @@ const styles = {
     fontSize:   '1rem',
     color:      'rgba(255,255,255,0.45)',
     fontStyle:  'italic',
-  },
-  legendContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '1.5rem',
-    justifyContent: 'center',
-    marginBottom: '3rem',
-    padding: '1rem',
-    borderTop: '1px solid rgba(255,255,255,0.05)',
-    borderBottom: '1px solid rgba(255,255,255,0.05)',
-  },
-  legendItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    fontFamily: '"DM Mono", monospace',
-    fontSize: '0.75rem',
-    textTransform: 'uppercase',
-    letterSpacing: '0.1em',
-    color: 'rgba(255,255,255,0.6)',
-  },
-  legendDot: {
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
   }
 }
+

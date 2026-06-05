@@ -218,6 +218,7 @@ const styles = {
     lineHeight: 1.8,
     color:      'rgba(255,255,255,0.58)',
     margin:     '0 0 1.25rem',
+    textAlign:  'justify',
   },
   takeawayBox: {
     borderTop:  '1px solid rgba(255,255,255,0.07)',
@@ -285,5 +286,6 @@ const styles = {
     lineHeight: 1.8,
     paddingLeft: '1.5rem',
     marginBottom: '2rem',
+    textAlign: 'justify',
   }
 }

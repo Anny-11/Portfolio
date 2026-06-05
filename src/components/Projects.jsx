@@ -300,6 +300,7 @@ const styles = {
     color:      'rgba(255,255,255,0.45)',
     fontStyle:  'italic',
     margin:     '0 0 1.25rem',
+    textAlign:  'justify',
   },
   metaKey: {
     fontFamily:    '"DM Mono", monospace',
@@ -314,6 +315,7 @@ const styles = {
     lineHeight: 1.75,
     color:      'rgba(255,255,255,0.58)',
     margin:     0,
+    textAlign:  'justify',
   },
   modalOverlay: {
     position: 'fixed',
