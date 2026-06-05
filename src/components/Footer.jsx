@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <>
       <footer className="footer-container">
-        <span style={styles.text}>© 2025 Anny. All rights reserved.</span>
+        <span style={styles.text}>© Anny. All rights reserved.</span>
 
         {/* Back to top */}
         <button

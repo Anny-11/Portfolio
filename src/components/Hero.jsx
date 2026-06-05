@@ -100,11 +100,6 @@ export default function Hero() {
       {/* Content */}
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '820px' }}>
 
-        {/* Status badge */}
-        <div className="animate-fadeUp-d2" style={styles.badge}>
-          Open to opportunities · 2025
-        </div>
-
         {/* Name */}
         <h1 className="animate-fadeUp-d1" style={styles.name}>
           Varshini N P
